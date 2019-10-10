@@ -11,6 +11,8 @@ import cv2
 import numpy as np
 import pickle
 import os
+from gender.pred import *
+from gender_and_race import gender_race_detector
 import face_model
 import argparse
 
@@ -46,17 +48,18 @@ def detect_align_recognize(video_capture, pnet, rnet, onet,model, class_names, c
             best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
             for i in range(len(best_class_indices)):
                 best_name[i] = class_names[best_class_indices[i]]
-            
             # Determine each face's gender and race. 
             # gender: Male, Female
             # race: White, Black, Asian
-            race, gender = gender_race_detector(single_face_locations, labels, clf, frame)
-            print('1111111111111111111111111111111')
+            race, gender = gender_race_detector(single_face_locations, labels, clf, frame) 
         except:
             pass
 
 def main(args):
     arcface_model = face_model.FaceModel(args)
+    gender_model = 'gender/face_model.pkl'
+    with open(gender_model,'rb') as f:
+        clf, labels = pickle.load(f,encoding='latin1')
     video_capture = cv2.VideoCapture(0)
     classifier_path ="trained_classifier/classifier.pkl"
     with open(classifier_path, 'rb') as f:
