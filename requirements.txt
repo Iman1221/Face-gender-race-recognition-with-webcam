@@ -1,0 +1,21 @@
+opencv-contrib-python 
+pickle
+threading
+keras
+numpy
+scipy
+scikit-learn
+statistics
+random
+re
+time
+tqdm
+dlib
+face_recognition
+h5py
+matplotlib
+Pillow
+requests
+psutil
+tensorflow
+pytube == 8.0.2
