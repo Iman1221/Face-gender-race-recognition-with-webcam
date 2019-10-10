@@ -11,11 +11,35 @@ import cv2
 import numpy as np
 import pickle
 import os
+from threading import Thread
+from face_tracking1.face_tracking import *
 from gender.pred import *
+from thread_with_return import ThreadWithReturnValue
 from gender_and_race import gender_race_detector
 import face_model
 import argparse
 
+def track_and_show(video_capture):
+    """"
+    track_and_show draws bounding boxes for any detected face
+    and tracks it.
+    """
+    event_interval = 2
+    pipeline = Pipeline(event_interval=event_interval)
+    while True:
+        ret, frame = video_capture.read() # Read video from webcam
+        try:
+            # Detect faces OR track the detected face. 
+            boxes, detected_new = pipeline.boxes_for_frame(frame)
+            color = GREEN
+            # Draw bounding boxes (and race, gender and Name) for every detected face.
+            draw_boxes(frame, boxes,best_name,color,best_class_probabilities,race,gender)
+            print('22222222222222222222222222222222')
+            cv2.imshow('Video1', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        except:
+            print("An exception in track_and_show occurred")
 
 def detect_align_recognize(video_capture, pnet, rnet, onet,model, class_names, clf, labels,arcface_model):
     """"
@@ -48,10 +72,12 @@ def detect_align_recognize(video_capture, pnet, rnet, onet,model, class_names, c
             best_class_probabilities = predictions[np.arange(len(best_class_indices)), best_class_indices]
             for i in range(len(best_class_indices)):
                 best_name[i] = class_names[best_class_indices[i]]
+            
             # Determine each face's gender and race. 
             # gender: Male, Female
             # race: White, Black, Asian
-            race, gender = gender_race_detector(single_face_locations, labels, clf, frame) 
+            race, gender = gender_race_detector(single_face_locations, labels, clf, frame)
+            print('1111111111111111111111111111111')
         except:
             pass
 
@@ -73,7 +99,15 @@ def main(args):
             # Bounding box
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, "align")
 
-    detect_align_recognize(video_capture, pnet, rnet, onet,model,class_names, clf, labels,arcface_model)
+    # Using two threads, one for recognition, the other for detecton, tracking and showing the results
+    p1 = ThreadWithReturnValue(target = detect_align_recognize, args=(video_capture, pnet, rnet, onet,model,class_names, clf, labels,arcface_model, ))
+    p2 = ThreadWithReturnValue(target = track_and_show, args=(video_capture,))#, clf, labels
+
+    p1.start()
+    p2.start()
+
+    p1.join()
+    p2.join()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='face model test')
