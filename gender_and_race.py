@@ -12,12 +12,6 @@ def gender_race_detector(bb, labels,clf, frame):
         locs[l][1] = int(float(locs[l][2]))
         locs[l][2] = int(float(locs[l][3]))
         locs[l][3] = int(float(locs[l][0]))
-    # for i in range(len(bb)):
-    #     locs[i][0] = int(float(bb[i][0]))
-    #     locs[i][1] = int(float(bb[i][2]))
-    #     locs[i][2] = int(bb[i][3])
-    #     locs[i][3] = int(bb[i][1])
-
 
     single_face_locations = []
     for i in range(len(bb)):
@@ -27,7 +21,6 @@ def gender_race_detector(bb, labels,clf, frame):
         loc1 = int(bb[i][0])
         loc = (loc0, loc3, loc2, loc1)
         single_face_locations.append(loc)
-
 
     face_encodings1 = face_recognition.face_encodings(frame)
     if not face_encodings1:
