@@ -59,4 +59,7 @@ Opencv's lightweight face tracker is used for face tracking.
 
 # 5. Run the code
 
-Plug in your webcam and run "man.py"
+Plug in your webcam and run "main.py"
+
+<img src="https://raw.githubusercontent.com/Iman1221/Face-gender-race-recognition-with-webcam/master/test_image.png"
+height="300">
