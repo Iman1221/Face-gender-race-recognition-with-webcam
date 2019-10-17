@@ -20,7 +20,7 @@ def draw_boxes(frame, boxes,best_name,color,best_class_probabilities,race,gender
         person_name = best_name[counter]
         cv2.putText(frame, race[counter], (int(x), int(h)), cv2.FONT_HERSHEY_COMPLEX_SMALL,1, (0, 0, 255), thickness=1, lineType=2)
         cv2.putText(frame, gender[counter], (int(x), int(h) + 20), cv2.FONT_HERSHEY_COMPLEX_SMALL,1, (0, 0, 255), thickness=1, lineType=2)
-        if (best_class_probabilities[counter] > 0.2):
+        if (best_class_probabilities[counter] > 0.45):
             cv2.putText(frame, person_name, (int(text_x), int(text_y) + 40), cv2.FONT_HERSHEY_COMPLEX_SMALL,
                     1, (0, 0, 255), thickness=1, lineType=2)
         else:
